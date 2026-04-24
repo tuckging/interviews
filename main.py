@@ -9,10 +9,12 @@ def read_root():
     return {"Hello": "World"}
 
 DB_PASSWORD = "6yt9h3"
-db = dict()
-db_type = "dict"
+# db = dict()
+# db_type = "dict"
 # db = list()
 # db_type = "list"
+db = set()
+db_type = "set"
 
 # handle POST request
 @app.post("/items/{item_id}")
@@ -24,13 +26,15 @@ def create_item(item_id, i):
         print("Creating item with ID:" + item_id + "and data:" + str(i))
         if db_type == "list":
             db.append({"item_id": item_id, "item": i})
-        else:
+        elif db_type == "dict":
             db[item_id] = i
+        elif db_type == "set":
+            db.add(i)
         return {"item_id": item_id, "item": i}
 
 @app.get("/items/{item_id}")
 def read_item(item_id):
-    if db_type == "list":
+    if db_type == "list" or db_type == "set":
         item = next(i for i in db if i["item_id"] == item_id)
     else:
         item = db.get(item_id)
